@@ -33,6 +33,7 @@
 
 	function AddUser($data)
 	{
+		$data['pass'] = "соль" . md5($data['pass']);
 		$xml=simplexml_load_file('data.xml');
 		$new_user = $xml->addChild('user');
 		foreach ($data as $key => $value) {
