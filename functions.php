@@ -13,7 +13,6 @@
 	}
 	function MakeResponse($status,$msg,$logged)
 	{
-		$_SESSION['logged'] = $logged;
 		$Response = [
 	  	'status' => $status,
 	    'msg'    => $msg,

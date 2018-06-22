@@ -7,7 +7,16 @@ var logout_btn = document.getElementById('logout_btn');
 
 sign_btn.onclick = function(event){
 	event.preventDefault();
-	SendRequest(signup_form, 'sign_up.php')
+	let fields = signup_form.getElementsByTagName('input');
+	for (var i = 0; i < fields.length; i++) {
+		if(!fields[i].checkValidity()){
+			notice.classList.add("error");
+			notice.innerHTML = fields[i].validationMessage;
+			return;
+		}
+	}
+	SendRequest(signup_form, 'sign_up.php');
+
 }
 login_btn.onclick = function(event){
 	event.preventDefault();
@@ -52,12 +61,16 @@ function ShowSignUp(event){
 	event.preventDefault();
 	login_form.style.display = "none";
 	signup_form.style.display = "inline-block";
+	signup_form.reset();
+	login_form.reset();
 }
 
 function ShowLogIn(event){
 	event.preventDefault();
 	signup_form.style.display = "none";
 	login_form.style.display = "inline-block";	
+	signup_form.reset();
+	login_form.reset();
 }
 function HideForms(){
 	login_form.style.display = "none";
