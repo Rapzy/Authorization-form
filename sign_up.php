@@ -1,50 +1,31 @@
 <?php   
-	error_reporting(0);
-	$is_emty = false;
-	foreach ($_POST as $key => $value) {
-		if (!empty($value)){
-			$user[$key] = htmlentities(trim($value));
-		}
-		else{
-			$is_emty = true;
-			break;
-		}
-	}
-
+	include_once 'functions.php';
 	if ($is_emty){
-		MakeResponse('error',"Заполните все поля!<br>");
+		MakeResponse('error',"Заполните все поля!<br>",false);
 	}
 	elseif ($user['pass'] !== $user['confirm_pass']){
-		MakeResponse('error',"Введённые пароли не совпадают!<br>");
+		MakeResponse('error',"Введённые пароли не совпадают!<br>",false);
 	}
 	else{
 		unset($user['confirm_pass']);
 		if(AddUser($user)){
-			MakeResponse('success',"Вы успешно зарегистрировались!<br>");
+			MakeResponse('success',"Вы успешно зарегистрировались!<br>",false);
 		}
-	}
-
-	function MakeResponse($status,$msg)
-	{
-		$Response = [
-	  	'status' => $status,
-	    'msg'    => $msg
-  	];
-  	echo json_encode($Response);
 	}
 
 	function AddUser($data)
 	{
 		$data['salt'] = GenerateSalt();
 		$data['pass'] = md5($data['salt'] . $data['pass']);
+		$data['hash'] = '';
 		$users=simplexml_load_file('data.xml');
 		for ($i=0; $i < count($users); $i++) { 
 			if ($users->user[$i]->login == $data['login']){
-				MakeResponse('error',"Логин уже используется!<br>");
+				MakeResponse('error',"Логин уже используется!<br>",false);
 				return false;
 			}
 			elseif($users->user[$i]->email == $data['email']){
-				MakeResponse('error',"E-mail уже используется!<br>");
+				MakeResponse('error',"E-mail уже используется!<br>",false);
 				return false;
 			}
 		}
@@ -54,13 +35,4 @@
 		}
 		$users->asXML('data.xml');
 		return true;
-	}
-
-	function GenerateSalt(){
-		$salt = '';
-		$length = rand(5,10);//Длина соли
-		for ($i=0; $i <$length ; $i++) { 
-			$salt .= chr(rand(33,126));
-		}
-		return $salt;
 	}

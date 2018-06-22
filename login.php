@@ -1,32 +1,12 @@
 <?php   
-	error_reporting(0);
-	$is_emty = false;
-	foreach ($_POST as $key => $value) {
-		if (!empty($value)){
-			$user[$key] = htmlentities(trim($value));
-		}
-		else{
-			$is_emty = true;
-			break;
-		}
-	}
-
+	include_once 'functions.php';
 	if ($is_emty){
-		MakeResponse('error',"Заполните все поля!<br>");
+		MakeResponse('error',"Заполните все поля!<br>",false);
 	}
 	else{
 		if (!LogIn($user)){
-			MakeResponse('error',"Введены неккоректные данные<br>");
+			MakeResponse('error',"Введены неккоректные данные<br>",false);
 		}
-	}
-
-	function MakeResponse($status,$msg)
-	{
-		$Response = [
-	  	'status' => $status,
-	    'msg'    => $msg
-  	];
-  	echo json_encode($Response);
 	}
 
 	function LogIn($data)
@@ -35,7 +15,13 @@
 		for ($i=0; $i < count($users); $i++) { 
 			if ($users->user[$i]->login == $data['login'] && $users->user[$i]->pass == md5($users->user[$i]->salt . $data['pass'])){
 				$name = $users->user[$i]->name;
-				MakeResponse('success',"Hello $name<br>");
+				$hash = md5(GenerateSalt());
+				$users->user[$i]->hash = $hash;
+				setcookie('username', $name, time() + 3600 * 24 * 7);
+				setcookie('hash', $hash, time() + 3600 * 24 * 7);
+				$_SESSION['hash'] = $hash;
+				$users->asXML('data.xml');
+				MakeResponse('success',"Hello $name<br>", true);
 				return true;
 			}
 		}
