@@ -18,6 +18,7 @@
 		MakeResponse('error',"Введённые пароли не совпадают!<br>");
 	}
 	else{
+		unset($user['confirm_pass']);
 		AddUser($user);
 		MakeResponse('success',"Hello $user[name]<br>");
 	}
@@ -33,11 +34,21 @@
 
 	function AddUser($data)
 	{
-		$data['pass'] = "соль" . md5($data['pass']);
-		$xml=simplexml_load_file('data.xml');
-		$new_user = $xml->addChild('user');
+		$data['salt'] = GenerateSalt();
+		$data['pass'] = md5($data['salt'] . $data['pass']);
+		$users=simplexml_load_file('data.xml');
+		$new_user = $users->addChild('user');
 		foreach ($data as $key => $value) {
 			$new_user->addChild($key, $value);
 		}
-		$xml->asXML('data.xml');
+		$users->asXML('data.xml');
+	}
+
+	function GenerateSalt(){
+		$salt = '';
+		$length = rand(5,10);//Длина соли
+		for ($i=0; $i <$length ; $i++) { 
+			$salt .= chr(rand(33,126));
+		}
+		return $salt;
 	}

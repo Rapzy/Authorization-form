@@ -54,8 +54,7 @@ input:not([type="submit"]) {
 .left{
 	float:left;
 }
-#myForm{
-	display: inline-block;
+.form{
 	margin:20px;
 	text-align: left;
 	border: 1px #0000001e solid;

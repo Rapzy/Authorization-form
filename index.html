@@ -6,14 +6,20 @@
 	<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-	<form id="myForm">
-		<input type="text" name="login" id="login" placeholder="Login">
-		<input type="password" name="pass" id="pass" placeholder="Password">
-		<input type="password" name="confirm_pass" id="confirm_pass" placeholder="Confirm password">
-		<input type="text" name="email" id="email" placeholder="E-mail">
-		<input type="text" name="name" id="name" placeholder="Name">
-		<input type="submit" value="Sign Up" class="btn left">
-		<button class="btn btn-outline right">Log In</button>
+	<form id="signup_form" class="form" style="display: none;">
+		<input type="text" name="login" placeholder="Login">
+		<input type="password" name="pass" placeholder="Password">
+		<input type="password" name="confirm_pass" placeholder="Confirm password">
+		<input type="text" name="email" placeholder="E-mail">
+		<input type="text" name="name" placeholder="Name">
+		<input type="submit" value="Sign Up" class="btn left" id="signup_btn">
+		<button class="btn btn-outline right" onclick="ShowLogIn(event)">Log In</button>
+	</form>
+	<form id="login_form" class="form" style="display: inline-block;">
+		<input type="text" name="login" placeholder="Login">
+		<input type="password" name="pass" placeholder="Password">
+		<input type="submit" value="Log In" class="btn left" id="login_btn">
+		<button class="btn btn-outline right" onclick="ShowSignUp(event)">Sign Up</button>
 	</form>
 	<section id="notice">
 	</section>
